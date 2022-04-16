@@ -314,13 +314,16 @@ class Arrow:
 
         """
 
-        if tzinfo is None:
-            if dt.tzinfo is None:
-                tzinfo = dateutil_tz.tzutc()
-            else:
-                tzinfo = dt.tzinfo
-
-        return cls(
+        try:
+          if dt.tzinfo is None:
+              tzinfo = dateutil_tz.tzutc()
+          else:
+              tzinfo = dt.tzinfo
+        except:
+          tzinfo = dateutil_tz.tzutc()
+              
+        try:
+          return cls(
             dt.year,
             dt.month,
             dt.day,
@@ -331,7 +334,19 @@ class Arrow:
             tzinfo,
             fold=getattr(dt, "fold", 0),
         )
-
+        except:
+          return cls(
+            1980,
+            1,
+            1,
+            0,
+            0,
+            0,
+            0,
+            tzinfo,
+            fold=0,
+        )
+        
     @classmethod
     def fromdate(cls, date: date, tzinfo: Optional[TZ_EXPR] = None) -> "Arrow":
         """Constructs an :class:`Arrow <arrow.arrow.Arrow>` object from a ``date`` and optional
